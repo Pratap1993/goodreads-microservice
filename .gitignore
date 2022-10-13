@@ -2,6 +2,7 @@ HELP.md
 */HELP.md
 target/
 */target/
+*/.mvn/
 
 ### STS ###
 .apt_generated
