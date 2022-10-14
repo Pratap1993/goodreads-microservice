@@ -1,49 +1,52 @@
 package com.chagu.bookinfoservice.service;
 
 import com.chagu.bookinfoservice.model.Book;
+import com.chagu.bookinfoservice.repository.BookAuthorRepository;
+import com.chagu.bookinfoservice.repository.BookRepository;
+import com.chagu.bookinfoservice.repository.CustomRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class BookService {
 
-    private static Map<String, Book> bookMap = null;
+    private final BookRepository bookRepository;
 
-    public BookService() {
-        List<Book> bookList = Arrays.asList(
-                new Book("1", "Half Girlfriend", "Chetan Bhagat", 150),
-                new Book("2", "The Bollywood Bride", "Sonal Dev", 175),
-                new Book("3", "The One You Cannot Have", "Preeti Shenoy", 100),
-                new Book("4", "I Too Had a Love Story", "Ravinder Singh", 400),
-                new Book("5", "Everyone Has A Story", "Savi Sharma", 150),
-                new Book("6", "The Girl of My Dreams", "Durjoy Datta", 300)
-        );
-        bookMap = bookList.stream().collect(Collectors.toMap(Book::getBookId, Function.identity()));
+    private final BookAuthorRepository bookAuthorRepository;
+
+    private final CustomRepository customRepository;
+
+    public BookService(BookRepository bookRepository, BookAuthorRepository bookAuthorRepository, CustomRepository customRepository) {
+        this.bookRepository = bookRepository;
+        this.bookAuthorRepository = bookAuthorRepository;
+        this.customRepository = customRepository;
     }
 
-    public Book getById(String bookId) {
-        Optional<Book> bookOpt = bookMap.entrySet().stream().filter(map -> map.getKey().equals(bookId))
-                .map(Map.Entry::getValue).findAny();
+    public Book getById(Integer bookId) {
+        List<Integer> sampleIds = Arrays.asList(1, 3, 7);
+        customRepository.getBookListByIds(sampleIds).forEach(book -> System.out.println(book.getBookId() + " " + book.getBookName()));
+        Optional<Book> bookOpt = bookRepository.findById(bookId);
         return bookOpt.orElse(null);
     }
 
     public Book getByName(String bookName) {
-        Optional<Book> bookOpt = bookMap.values().stream().filter(book -> book.getBookName().equals(bookName)).findAny();
+        Optional<Book> bookOpt = bookRepository.findByBookName(bookName);
         return bookOpt.orElse(null);
     }
 
     public List<Book> getAllBooks() {
-        return new ArrayList<>(bookMap.values());
+        return bookRepository.findAll();
     }
 
     public List<Book> getAllBooksByIds(String bookIds) {
         if (Objects.isNull(bookIds))
             return null;
         String ids = bookIds.replaceAll("\\s", "").replace("[", "").replace("]", "");
-        List<String> bookIdList = Arrays.asList(ids.split(","));
-        return bookMap.values().stream().filter(book -> bookIdList.contains(book.getBookId())).toList();
+        List<Integer> bookIdList = Arrays.stream(ids.split(",")).map(Integer::parseInt).toList();
+        return customRepository.getBookListByIds(bookIdList);
     }
 }

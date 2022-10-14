@@ -1,23 +1,30 @@
 package com.chagu.bookinfoservice.model;
 
+import javax.persistence.*;
+
+@Entity
 public class Book {
-    private String bookId;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "book_id")
+    private Integer bookId;
+
+    @Column(name = "book_name", nullable = false, unique = true)
     private String bookName;
-    private String bookAuthor;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "author_id")
+    private BookAuthor bookAuthor;
+
+    @Column(name = "book_price")
     private Integer bookPrice;
 
-    public Book(String bookId, String bookName, String bookAuthor, Integer bookPrice) {
-        this.bookId = bookId;
-        this.bookName = bookName;
-        this.bookAuthor = bookAuthor;
-        this.bookPrice = bookPrice;
-    }
-
-    public String getBookId() {
+    public Integer getBookId() {
         return bookId;
     }
 
-    public void setBookId(String bookId) {
+    public void setBookId(Integer bookId) {
         this.bookId = bookId;
     }
 
@@ -29,11 +36,11 @@ public class Book {
         this.bookName = bookName;
     }
 
-    public String getBookAuthor() {
+    public BookAuthor getBookAuthor() {
         return bookAuthor;
     }
 
-    public void setBookAuthor(String bookAuthor) {
+    public void setBookAuthor(BookAuthor bookAuthor) {
         this.bookAuthor = bookAuthor;
     }
 
