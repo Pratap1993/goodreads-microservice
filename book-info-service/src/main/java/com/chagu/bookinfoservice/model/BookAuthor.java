@@ -1,6 +1,8 @@
 package com.chagu.bookinfoservice.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,9 +15,11 @@ public class BookAuthor {
     private Integer authorId;
 
     @Column(name = "author_name", unique = true)
+    @NotEmpty(message = "Author name cannot be empty.")
     private String authorName;
 
     @Column(name = "author_email", unique = true)
+    @Email(message = "Please provide valid email for author.")
     private String authorEmail;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "bookAuthor", orphanRemoval = true)
@@ -43,5 +47,9 @@ public class BookAuthor {
 
     public void setAuthorEmail(String authorEmail) {
         this.authorEmail = authorEmail;
+    }
+
+    public List<Book> getBooks() {
+        return books;
     }
 }

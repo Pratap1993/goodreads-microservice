@@ -1,6 +1,9 @@
 package com.chagu.bookinfoservice.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @Entity
 public class Book {
@@ -11,6 +14,7 @@ public class Book {
     private Integer bookId;
 
     @Column(name = "book_name", nullable = false, unique = true)
+    @NotEmpty(message = "Book name cannot be empty.")
     private String bookName;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -18,6 +22,8 @@ public class Book {
     private BookAuthor bookAuthor;
 
     @Column(name = "book_price")
+    @NotNull(message = "Book price cannot be null.")
+    @Min(value = 10, message = "Please provide price greater than 10.")
     private Integer bookPrice;
 
     public Integer getBookId() {

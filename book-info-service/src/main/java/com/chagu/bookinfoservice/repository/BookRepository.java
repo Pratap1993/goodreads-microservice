@@ -8,4 +8,8 @@ import java.util.Optional;
 public interface BookRepository extends JpaRepository<Book, Integer> {
 
     Optional<Book> findByBookName(String bookName);
+
+   /* @Modifying
+    @Query("update Book b set b. = ?1, u.lastname = ?2 where u.id = ?3")
+    void setUserInfoById(String firstname, String lastname, Integer userId);*/
 }

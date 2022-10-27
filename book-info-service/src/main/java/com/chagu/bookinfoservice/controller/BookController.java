@@ -1,12 +1,11 @@
 package com.chagu.bookinfoservice.controller;
 
-import com.chagu.bookinfoservice.model.Book;
+import com.chagu.bookinfoservice.dto.request.BookRequest;
+import com.chagu.bookinfoservice.dto.response.BookDetailsResponse;
 import com.chagu.bookinfoservice.service.BookService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -20,22 +19,27 @@ public class BookController {
     }
 
     @GetMapping("/")
-    public List<Book> getAllBooks() {
+    public List<BookDetailsResponse> getAllBooks() {
         return bookService.getAllBooks();
     }
 
     @GetMapping("/{bookId}")
-    public Book getBookById(@PathVariable("bookId") Integer bookId) {
+    public BookDetailsResponse getBookById(@PathVariable("bookId") Integer bookId) {
         return bookService.getById(bookId);
     }
 
     @GetMapping("/book-name/{bookName}")
-    public Book getBookByName(@PathVariable("bookName") String bookName) {
+    public BookDetailsResponse getBookByName(@PathVariable("bookName") String bookName) {
         return bookService.getByName(bookName);
     }
 
     @GetMapping("/book-ids/{bookIds}")
-    public List<Book> getBookByIds(@PathVariable("bookIds") String bookIds) {
+    public List<BookDetailsResponse> getBookByIds(@PathVariable("bookIds") String bookIds) {
         return bookService.getAllBooksByIds(bookIds);
+    }
+
+    @PostMapping("/save-book")
+    public BookDetailsResponse saveBook(@RequestBody @Valid BookRequest bookRequest) {
+        return bookService.saveBook(bookRequest);
     }
 }
